@@ -1,10 +1,7 @@
-package com.heske.test.room_relationships
+package com.heske.test.room_relationships.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 
 /**
  * NOTE: All relationship queries require
@@ -22,7 +19,7 @@ interface UniversityDao {
     // the Student
     @Query("SELECT * from Student")
     @Transaction
-    fun fetchStudentsWithVehicles(): LiveData<List<StudentWithVehicles>>
+    suspend fun selectStudentsWithVehicles(): List<StudentWithVehicles>
 
     // ONE-TO-ONE
     // Return a list of Students, each having one ApplicationToUniversity
@@ -33,17 +30,18 @@ interface UniversityDao {
     //   3. Only query for Students who DO have an associated ApplicationToUniversity
     @Query("SELECT * from Student")
     @Transaction
-    fun fetchStudentsWithApplicationToUniversity(): LiveData<List<StudentWithApplicationToUniversity>>
+    fun selectStudentsWithApplicationToUniversity(): LiveData<List<StudentWithApplicationToUniversity>>
 
     // MANY-TO-MANY
     @Query("SELECT * from Student")
     @Transaction
-    fun fetchStudentsWithClasses(): LiveData<List<StudentWithCourses>>
+    suspend fun selectStudentsWithCourses(): List<StudentWithCourses>
 
-    // MANY-TO-MANY
     @Query("SELECT * from Course")
     @Transaction
-    fun fetchCoursesWithStudents(): LiveData<List<CourseWithStudents>>
+    suspend fun selectCoursesWithStudents(): List<CourseWithStudents>
+
+    /** Insert **/
 
     @Insert
     suspend fun insert(student: Student): Long
@@ -53,4 +51,20 @@ interface UniversityDao {
 
     @Insert
     suspend fun insert(vehicle: Vehicle): Long
+
+    @Insert
+    suspend fun insertCourseEnrollment(courseEnrollment: CourseEnrollment): Long
+
+    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertStudents(list: List<Student>)
+
+    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertVehicles(list: List<Vehicle>)
+
+    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertCourses(list: List<Course>)
+
+    /** Other Useful queries **/
+    @Query("SELECT count(*) from Student")
+    suspend fun countStudentsWithVehicles(): Int
 }

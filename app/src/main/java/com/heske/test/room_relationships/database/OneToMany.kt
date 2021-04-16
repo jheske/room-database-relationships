@@ -1,9 +1,13 @@
-package com.heske.test.room_relationships
+package com.heske.test.room_relationships.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 /**
+ * Student and Vehicle entities/tables.
+ * Address class that will be Embedded in Student.
+ * StudentWithVehicles entity represents Relationship between
+ * (one) Student and (many) Vehicles
+ *
  * FOR THE GORY DETAILS...
  * Android will generate a UniversityDao_Impl class containing
  * all the low-level SQLite code (cursors, loaders, behind-the-scenes additional queries,
@@ -42,10 +46,10 @@ data class Address(
     ]
 )
 data class Vehicle(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val vehicleId: Long = 0L,
-    val vehicleType: String = "",
-    val ownerId: Long=0L
+    var vehicleType: String = "",
+    var ownerId: Long=0L
 )
 
 data class StudentWithVehicles(

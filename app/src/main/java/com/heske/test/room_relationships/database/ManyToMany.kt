@@ -1,4 +1,4 @@
-package com.heske.test.room_relationships
+package com.heske.test.room_relationships.database
 
 import androidx.room.*
 
@@ -15,7 +15,7 @@ data class Course(
 )
 
 /**
- * Relationship between the two classes.
+ * Relationship between Students and Courses.
  */
 @Entity(
     // Composite primaryKey so a Student can't take the same Course twice
@@ -25,23 +25,22 @@ data class Course(
         ForeignKey(
             entity = Student::class,
             parentColumns = ["studentId"], // in Student table
-            childColumns = ["studentId"]   // matches CourseEnrollments
+            childColumns = ["studentId"]   // matches CourseEnrollments.studentId
         ),
         ForeignKey(
             entity = Course::class,
             parentColumns = ["courseId"], // in Course table
-            childColumns = ["courseId"]   // matches CourseEnrollments
+            childColumns = ["courseId"]   // matches CourseEnrollments.courseId
         )
     ]
 )
-data class CourseEnrollments(
-    val studentId: Long = 0L,
-    val courseId: Long = 0L
-
+data class CourseEnrollment(
+    val studentId: Long,
+    val courseId: Long,
 )
 
 /**
- * Many-to-many requires associatedBy
+ * Many-to-many Relationships require associatedBy / Junction
  */
 data class StudentWithCourses(
     @Embedded
@@ -49,7 +48,7 @@ data class StudentWithCourses(
     @Relation(
         parentColumn = "studentId",
         entityColumn = "courseId",
-        associateBy = Junction(value = CourseEnrollments::class)
+        associateBy = Junction(value = CourseEnrollment::class)
     )
     val courses: List<Course>
 )
@@ -59,9 +58,10 @@ data class CourseWithStudents(
     val course: Course,
     @Relation(
         parentColumn = "courseId",
-        entityColumn = "studentIt",
-        associateBy = Junction(value = CourseEnrollments::class)
+        entityColumn = "studentId",
+        associateBy = Junction(value = CourseEnrollment::class)
     )
     val students: List<Student>
 )
+
 

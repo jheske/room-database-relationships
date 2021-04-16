@@ -1,4 +1,4 @@
-package com.heske.test.room_relationships
+package com.heske.test.room_relationships.database
 
 import androidx.room.*
 
