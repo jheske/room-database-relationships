@@ -1,13 +1,9 @@
 package com.heske.test.room_relationships.database
 
 import android.content.Context
-import androidx.annotation.NonNull
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import java.util.concurrent.Executors
-
 
 @Database(
     entities = [Student::class, Vehicle::class, ApplicationToUniversity::class, Course::class, CourseEnrollment::class],
@@ -16,34 +12,6 @@ import java.util.concurrent.Executors
 )
 abstract class UniversityDatabase : RoomDatabase() {
     abstract fun universityDao(): UniversityDao
-
-//    companion object {
-//
-//        @Volatile
-//        private var INSTANCE: UniversityDatabase? = null
-//
-//        fun getInstance(context: Context): UniversityDatabase =
-//            INSTANCE ?: synchronized(this) {
-//                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-//            }
-//
-//        private fun buildDatabase(context: Context) =
-//            Room.databaseBuilder(
-//                context.applicationContext,
-//                UniversityDatabase::class.java, "Sample.db"
-//            )
-//                // prepopulate the database after onCreate was called
-//                .addCallback(object : Callback() {
-//                    override fun onCreate(db: SupportSQLiteDatabase) {
-//                        super.onCreate(db)
-//                        // insert the data on the IO Thread
-//                        Executors.newSingleThreadScheduledExecutor().execute {
-//                            // getInstance(context).universityDao().insertAll(DataEntity.populateData())
-//                        }
-//                    }
-//                })
-//                .build()
-//    }
 
     companion object {
 
@@ -63,6 +31,7 @@ abstract class UniversityDatabase : RoomDatabase() {
                 )
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     .fallbackToDestructiveMigration()
+                        // TODO add this to pre-populate database
 //                    .addCallback(object : Callback() {
 //                        override fun onCreate(db: SupportSQLiteDatabase) {
 //                            super.onCreate(db)
