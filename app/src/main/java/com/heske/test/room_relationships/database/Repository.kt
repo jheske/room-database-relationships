@@ -7,6 +7,13 @@ import kotlinx.coroutines.withContext
 class Repository(
     private val universityDao: UniversityDao,
 ) {
+
+
+    suspend fun countStudentsWithVehicles(): Int {
+        return universityDao.countStudentsWithVehicles()
+    }
+
+    /** Insert **/
     suspend fun insertStudent(student: Student): Long {
         val dbId = universityDao.insert(student)
         return dbId
@@ -39,6 +46,7 @@ class Repository(
         universityDao.insertCourses(list)
     }
 
+    /** Select **/
     suspend fun getStudentWithVehicles(): List<StudentWithVehicles> {
         return universityDao.selectStudentsWithVehicles()
     }
@@ -55,9 +63,5 @@ class Repository(
         withContext(Dispatchers.IO) {
             UniversityDatabase.getDatabase(context).clearAllTables()
         }
-    }
-
-    suspend fun countStudentsWithVehicles(): Int {
-        return universityDao.countStudentsWithVehicles()
     }
 }

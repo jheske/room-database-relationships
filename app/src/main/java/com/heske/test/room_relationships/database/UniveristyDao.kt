@@ -11,17 +11,7 @@ import androidx.room.*
 
 @Dao
 interface UniversityDao {
-    // ONE-TO-MANY
-    // Return a list of Students, each having many Vehicles
-    // Return all StudentWithVehicles, ie., all Students with their Vehicles
-    // Transaction b/c Room has to run TWO SQL statements behind the scenes:
-    // one to get every Student, and another to get every Vehicle that belongs to
-    // the Student
-    @Query("SELECT * from Student")
-    @Transaction
-    suspend fun selectStudentsWithVehicles(): List<StudentWithVehicles>
-
-    // ONE-TO-ONE
+    /***** ONE-TO-ONE *****/
     // Return a list of Students, each having one ApplicationToUniversity
     // NOTE ApplicationToUniversity is non-nullable, so if a Student doesn't have an associated
     // ApplicationToUniversity, the query will fail. Several solutions to this:
@@ -32,7 +22,17 @@ interface UniversityDao {
     @Transaction
     fun selectStudentsWithApplicationToUniversity(): LiveData<List<StudentWithApplicationToUniversity>>
 
-    // MANY-TO-MANY
+    /***** ONE-TO-MANY ****/
+    // Return a list of Students, each having many Vehicles
+    // Return all StudentWithVehicles, ie., all Students with their Vehicles
+    // Transaction b/c Room has to run TWO SQL statements behind the scenes:
+    // one to get every Student, and another to get every Vehicle that belongs to
+    // the Student
+    @Query("SELECT * from Student")
+    @Transaction
+    suspend fun selectStudentsWithVehicles(): List<StudentWithVehicles>
+
+    /***** MANY-TO-MANY *****/
     @Query("SELECT * from Student")
     @Transaction
     suspend fun selectStudentsWithCourses(): List<StudentWithCourses>
@@ -63,6 +63,11 @@ interface UniversityDao {
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertCourses(list: List<Course>)
+
+
+    /** Insert Many to Many **/
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(join: CourseWithStudents)
 
     /** Other Useful queries **/
     @Query("SELECT count(*) from Student")

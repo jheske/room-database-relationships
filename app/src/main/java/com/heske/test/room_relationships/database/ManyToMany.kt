@@ -4,8 +4,8 @@ import androidx.room.*
 
 /**
  * Many-to-many
- * A student can take many classes
- * and a class can have many students in it.
+ * A student can take many Courses
+ * and a Course can have many students in it.
  */
 @Entity
 data class Course(
@@ -19,6 +19,7 @@ data class Course(
  */
 @Entity(
     // Composite primaryKey so a Student can't take the same Course twice
+    // and a Course can't have the same Student twice
     primaryKeys = ["studentId", "courseId"],
     // Enforce valid studentId and courseId
     foreignKeys = [
@@ -63,5 +64,4 @@ data class CourseWithStudents(
     )
     val students: List<Student>
 )
-
 

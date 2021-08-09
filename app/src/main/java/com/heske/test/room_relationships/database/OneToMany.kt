@@ -40,8 +40,8 @@ data class Address(
     foreignKeys = [
         ForeignKey(
             entity = Student::class,
-            parentColumns = ["studentId"],
-            childColumns = ["ownerId"]
+            parentColumns = ["studentId"], // In Student table
+            childColumns = ["ownerId"]     // matches ownerId in Vehicle table
         )
     ]
 )
